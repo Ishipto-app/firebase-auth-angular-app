@@ -1,0 +1,22 @@
+<div class="min-h-screen bg-neutral-50 flex flex-col items-center justify-center p-4 font-sans text-center">
+  <mat-card class="w-full max-w-md p-10 rounded-2xl shadow-md bg-white border border-black/5">
+    <div class="w-20 h-20 rounded-full bg-amber-50 flex items-center justify-center text-amber-500 mx-auto mb-6">
+      <mat-icon class="scale-150">lock_person</mat-icon>
+    </div>
+    
+    <h1 class="text-3xl font-medium tracking-tight text-neutral-900 mb-2">Từ chối truy cập</h1>
+    <p class="text-neutral-500 mb-8">Bạn không có quyền truy cập vào trang này. Vui lòng liên hệ quản trị viên để được cấp quyền.</p>
+    
+    <div class="space-y-4">
+      <button mat-flat-button color="primary" class="w-full rounded-xl py-6 bg-emerald-600 hover:bg-emerald-700" routerLink="/">
+        <mat-icon>dashboard</mat-icon>
+        Quay lại Bảng điều khiển
+      </button>
+      
+      <button mat-stroked-button class="w-full rounded-xl py-6 border-neutral-200" routerLink="/logout">
+        <mat-icon>logout</mat-icon>
+        Đăng xuất
+      </button>
+    </div>
+  </mat-card>
+</div>

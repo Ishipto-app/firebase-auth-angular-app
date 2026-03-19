@@ -1,0 +1,24 @@
+<div class="min-h-screen bg-neutral-50 flex flex-col items-center justify-center p-4 font-sans text-center">
+  <mat-card class="w-full max-w-md p-10 rounded-2xl shadow-md bg-white border border-black/5">
+    <div class="text-9xl font-bold text-neutral-200 mb-4 select-none">404</div>
+    
+    <div class="w-20 h-20 rounded-full bg-red-50 flex items-center justify-center text-red-500 mx-auto mb-6">
+      <mat-icon class="scale-150">error_outline</mat-icon>
+    </div>
+    
+    <h1 class="text-3xl font-medium tracking-tight text-neutral-900 mb-2">Không tìm thấy trang</h1>
+    <p class="text-neutral-500 mb-8">Rất tiếc, trang bạn đang tìm kiếm không tồn tại hoặc đã bị di chuyển.</p>
+    
+    <div class="space-y-4">
+      <button mat-flat-button color="primary" class="w-full rounded-xl py-6 bg-emerald-600 hover:bg-emerald-700" routerLink="/">
+        <mat-icon>home</mat-icon>
+        Quay lại Trang chủ
+      </button>
+      
+      <button mat-stroked-button class="w-full rounded-xl py-6 border-neutral-200" (click)="window.history.back()">
+        <mat-icon>arrow_back</mat-icon>
+        Quay lại trang trước
+      </button>
+    </div>
+  </mat-card>
+</div>

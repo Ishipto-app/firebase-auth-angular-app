@@ -1,0 +1,52 @@
+<div class="min-h-screen bg-neutral-50 flex flex-col items-center justify-center p-4 font-sans">
+  <mat-card class="w-full max-w-md p-8 rounded-2xl shadow-md bg-white border border-black/5">
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-4">
+        <mat-icon class="scale-150">mark_email_read</mat-icon>
+      </div>
+      <h1 class="text-2xl font-bold tracking-tight text-neutral-900">
+        Xác thực Email
+      </h1>
+      <p class="text-neutral-500 text-sm mt-2 leading-relaxed">
+        Chúng tôi đã gửi một email xác thực đến địa chỉ của bạn. 
+        Vui lòng kiểm tra hộp thư và nhấn vào liên kết xác nhận để tiếp tục.
+      </p>
+    </div>
+
+    <div class="space-y-4">
+      @if (user$ | async; as user) {
+        <div class="bg-neutral-50 p-4 rounded-xl border border-neutral-100 text-center">
+          <p class="text-xs text-neutral-400 uppercase tracking-wider font-semibold mb-1">Email của bạn</p>
+          <p class="text-neutral-900 font-medium">{{ user.email }}</p>
+        </div>
+      }
+
+      @if (errorMessage()) {
+        <div class="bg-amber-50 text-amber-700 p-4 rounded-xl text-sm border border-amber-100 flex items-start gap-3">
+          <mat-icon class="text-amber-500 shrink-0">info</mat-icon>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <button mat-flat-button color="primary" class="w-full rounded-xl py-6 bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-100" 
+              [disabled]="isLoading()" (click)="checkVerification()">
+        @if (isLoading()) {
+          <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+        } @else {
+          <mat-icon class="mr-2">refresh</mat-icon>
+        }
+        Tôi đã xác thực xong
+      </button>
+
+      <div class="flex flex-col gap-2 pt-4">
+        <button mat-button class="text-neutral-500 text-sm" (click)="resendEmail()" [disabled]="isLoading()">
+          Không nhận được email? Gửi lại
+        </button>
+        
+        <button mat-button color="warn" class="text-sm" routerLink="/logout">
+          Đăng xuất và dùng tài khoản khác
+        </button>
+      </div>
+    </div>
+  </mat-card>
+</div>

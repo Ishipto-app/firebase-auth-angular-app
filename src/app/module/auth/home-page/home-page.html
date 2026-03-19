@@ -1,0 +1,165 @@
+<div class="min-h-screen bg-neutral-50 font-sans">
+  <!-- Navigation Bar -->
+  <nav class="bg-white border-b border-black/5 px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-2">
+      <div class="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center text-white">
+        <mat-icon>rocket_launch</mat-icon>
+      </div>
+      <span class="text-xl font-bold tracking-tight text-neutral-900">iShipTo App</span>
+    </div>
+    
+    <div class="flex items-center gap-4">
+      @let user = authService.user$ | async;
+      @if (user === undefined) {
+        <mat-spinner diameter="24"></mat-spinner>
+      } @else if (user) {
+        <div class="flex items-center gap-3 mr-4">
+          <div class="text-right hidden sm:block">
+            <p class="text-sm font-medium text-neutral-900">{{ user.displayName || 'Người dùng' }}</p>
+            <p class="text-xs text-neutral-500">{{ user.email }}</p>
+          </div>
+          <button mat-icon-button [routerLink]="['/admin/workflow']" title="Bảng điều khiển">
+            <mat-icon>dashboard</mat-icon>
+          </button>
+        </div>
+        <button mat-flat-button color="warn" class="rounded-xl" routerLink="/logout">
+          <mat-icon>logout</mat-icon>
+          Đăng xuất
+        </button>
+      } @else {
+        <button mat-button routerLink="/login">Đăng nhập</button>
+        <button mat-flat-button color="primary" class="rounded-xl bg-emerald-600" routerLink="/sign-up">
+          Đăng ký
+        </button>
+      }
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="max-w-7xl mx-auto px-6 py-20 lg:py-32 flex flex-col items-center text-center">
+    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 text-xs font-semibold mb-6 border border-emerald-100">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+      </span>
+      Phiên bản mới nhất đã sẵn sàng
+    </div>
+    
+    <h1 class="text-5xl lg:text-7xl font-bold tracking-tighter text-neutral-900 mb-6 max-w-4xl leading-tight">
+      Quản lý quy trình làm việc <span class="text-emerald-600 italic">thông minh</span> hơn bao giờ hết.
+    </h1>
+    
+    <p class="text-xl text-neutral-500 mb-10 max-w-2xl leading-relaxed">
+      Nền tảng iShipTo giúp bạn tối ưu hóa vận hành, theo dõi tiến độ và cộng tác hiệu quả trong thời gian thực.
+    </p>
+    
+    <div class="flex flex-col sm:flex-row gap-4">
+      <button mat-flat-button color="primary" class="rounded-2xl px-10 py-8 text-lg bg-emerald-600 hover:bg-emerald-700 shadow-lg shadow-emerald-200" routerLink="/login">
+        Khám phá ngay
+        <mat-icon class="ml-2">arrow_forward</mat-icon>
+      </button>
+      <button mat-stroked-button class="rounded-2xl px-10 py-8 text-lg border-neutral-200 hover:bg-neutral-100">
+        Xem tài liệu
+      </button>
+    </div>
+  </header>
+
+  <!-- Features Grid -->
+  <section class="bg-white py-24 border-y border-black/5">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+        <div class="flex flex-col gap-4">
+          <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center">
+            <mat-icon>speed</mat-icon>
+          </div>
+          <h3 class="text-xl font-bold text-neutral-900">Tốc độ vượt trội</h3>
+          <p class="text-neutral-500">Hệ thống được tối ưu hóa để xử lý hàng ngàn yêu cầu mỗi giây với độ trễ cực thấp.</p>
+        </div>
+        
+        <div class="flex flex-col gap-4">
+          <div class="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center">
+            <mat-icon>security</mat-icon>
+          </div>
+          <h3 class="text-xl font-bold text-neutral-900">Bảo mật tuyệt đối</h3>
+          <p class="text-neutral-500">Dữ liệu của bạn được mã hóa và bảo vệ bởi các tiêu chuẩn an ninh hàng đầu thế giới.</p>
+        </div>
+        
+        <div class="flex flex-col gap-4">
+          <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center">
+            <mat-icon>sync</mat-icon>
+          </div>
+          <h3 class="text-xl font-bold text-neutral-900">Đồng bộ tức thì</h3>
+          <p class="text-neutral-500">Cập nhật trạng thái công việc ngay lập tức trên tất cả các thiết bị của đội ngũ.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Management Section -->
+  @if (authService.roles().length > 0) {
+    <section class="py-24 bg-neutral-50">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+          <h2 class="text-3xl font-bold tracking-tight text-neutral-900 mb-4">Quản lý hệ thống</h2>
+          <p class="text-neutral-500 max-w-xl mx-auto">Truy cập nhanh vào các công cụ quản lý và quy trình làm việc của bạn.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- User List Card -->
+          @if (authService.hasRole('admin')) {
+            <mat-card class="p-8 rounded-3xl border border-black/5 shadow-sm hover:shadow-md transition-shadow bg-white flex flex-col items-start gap-6">
+              <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center">
+                <mat-icon class="scale-125">people</mat-icon>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold text-neutral-900 mb-2">Danh sách người dùng</h3>
+                <p class="text-neutral-500 leading-relaxed mb-6">
+                  Xem và quản lý danh sách tất cả người dùng trong hệ thống, bao gồm thông tin email và vai trò được cấp quyền.
+                </p>
+              </div>
+              <button mat-flat-button color="primary" class="rounded-xl px-6 py-5 bg-emerald-600" routerLink="/admin/user-list">
+                Truy cập danh sách
+                <mat-icon class="ml-2">arrow_forward</mat-icon>
+              </button>
+            </mat-card>
+          }
+
+          <!-- Workflow Card -->
+          @if (authService.hasRole('workflow')) {
+            <mat-card class="p-8 rounded-3xl border border-black/5 shadow-sm hover:shadow-md transition-shadow bg-white flex flex-col items-start gap-6">
+              <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center">
+                <mat-icon class="scale-125">assignment</mat-icon>
+              </div>
+              <div>
+                <h3 class="text-2xl font-bold text-neutral-900 mb-2">Công việc hàng ngày</h3>
+                <p class="text-neutral-500 leading-relaxed mb-6">
+                  Theo dõi và thực hiện các quy trình công việc hàng ngày, quản lý tiến độ và đảm bảo mọi thứ vận hành trơn tru.
+                </p>
+              </div>
+              <button mat-flat-button color="primary" class="rounded-xl px-6 py-5 bg-blue-600" routerLink="/admin/workflow">
+                Xem công việc
+                <mat-icon class="ml-2">arrow_forward</mat-icon>
+              </button>
+            </mat-card>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- Footer -->
+  <footer class="py-12 border-t border-black/5 bg-neutral-50">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-2 opacity-50">
+        <mat-icon>rocket_launch</mat-icon>
+        <span class="font-bold">iShipTo</span>
+      </div>
+      <p class="text-neutral-400 text-sm">© 2026 iShipTo. Tất cả quyền được bảo lưu.</p>
+      <div class="flex gap-6 text-neutral-400 text-sm">
+        <a href="#" class="hover:text-neutral-900">Điều khoản</a>
+        <a href="#" class="hover:text-neutral-900">Bảo mật</a>
+        <a href="#" class="hover:text-neutral-900">Liên hệ</a>
+      </div>
+    </div>
+  </footer>
+</div>

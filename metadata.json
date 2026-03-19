@@ -1,0 +1,5 @@
+{
+  "name": "Firebase Auth Angular App",
+  "description": "An Angular application demonstrating Firebase Authentication integration, replacing a custom backend login.",
+  "requestFramePermissions": []
+}

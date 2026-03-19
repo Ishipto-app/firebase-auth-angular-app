@@ -1,0 +1,14 @@
+/* Home page specific styles */
+:host {
+  display: block;
+}
+
+button[mat-flat-button].py-8 {
+  height: auto;
+  line-height: 1;
+}
+
+button[mat-stroked-button].py-8 {
+  height: auto;
+  line-height: 1;
+}

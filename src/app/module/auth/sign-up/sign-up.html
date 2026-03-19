@@ -1,0 +1,67 @@
+<div class="min-h-screen bg-neutral-50 flex flex-col items-center justify-center p-4 font-sans">
+  <mat-card class="w-full max-w-md p-8 rounded-2xl shadow-md bg-white border border-black/5">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-medium tracking-tight text-neutral-900">
+        Tạo tài khoản
+      </h1>
+      <p class="text-neutral-500 text-sm mt-2">Đăng ký để sử dụng hệ thống iShipTo</p>
+    </div>
+
+    <form [formGroup]="authForm" class="flex flex-col gap-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="email@example.com">
+        <mat-icon matPrefix class="mr-2 text-neutral-400">email</mat-icon>
+        @if (authForm.get('email')?.hasError('required')) {
+          <mat-error>Email là bắt buộc</mat-error>
+        }
+        @if (authForm.get('email')?.hasError('email')) {
+          <mat-error>Email không hợp lệ</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Mật khẩu</mat-label>
+        <input matInput formControlName="password" type="password" placeholder="••••••••">
+        <mat-icon matPrefix class="mr-2 text-neutral-400">lock</mat-icon>
+        @if (authForm.get('password')?.hasError('required')) {
+          <mat-error>Mật khẩu là bắt buộc</mat-error>
+        }
+        @if (authForm.get('password')?.hasError('minlength')) {
+          <mat-error>Mật khẩu phải có ít nhất 8 ký tự</mat-error>
+        }
+        @if (authForm.get('password')?.hasError('pattern')) {
+          <mat-error>Mật khẩu phải có chữ hoa, chữ thường, ký tự số và ký tự đặc biệt</mat-error>
+        }
+      </mat-form-field>
+
+      @if (errorMessage()) {
+        <div class="bg-red-50 text-red-600 p-3 rounded-lg text-xs border border-red-100 mb-2">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (successMessage()) {
+        <div class="bg-emerald-50 text-emerald-600 p-3 rounded-lg text-xs border border-emerald-100 mb-2">
+          {{ successMessage() }}
+        </div>
+      }
+
+      <button type="button" mat-flat-button color="primary" class="w-full rounded-xl py-6 bg-emerald-600 hover:bg-emerald-700" [disabled]="isLoading()" (click)="onRegister()">
+        @if (isLoading()) {
+          <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+        } @else {
+          <mat-icon>person_add</mat-icon>
+        }
+        Đăng ký
+      </button>
+
+      <p class="text-center text-sm text-neutral-600 mt-4">
+        Đã có tài khoản?
+        <button type="button" mat-button color="primary" class="p-0 min-w-0 h-auto font-medium" routerLink="/login">
+          Đăng nhập ngay
+        </button>
+      </p>
+    </form>
+  </mat-card>
+</div>

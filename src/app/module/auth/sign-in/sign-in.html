@@ -1,0 +1,58 @@
+<div class="min-h-screen bg-neutral-50 flex flex-col items-center justify-center p-4 font-sans">
+  <!-- Login View -->
+  <mat-card class="w-full max-w-md p-8 rounded-2xl shadow-md bg-white border border-black/5">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl font-medium tracking-tight text-neutral-900">
+        Đăng nhập
+      </h1>
+      <p class="text-neutral-500 text-sm mt-2">Sử dụng Firebase Authentication</p>
+    </div>
+
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="flex flex-col gap-4">
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Email</mat-label>
+        <input matInput formControlName="email" type="email" placeholder="email@example.com">
+        <mat-icon matPrefix class="mr-2 text-neutral-400">email</mat-icon>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="w-full">
+        <mat-label>Mật khẩu</mat-label>
+        <input matInput formControlName="password" type="password" placeholder="••••••••">
+        <mat-icon matPrefix class="mr-2 text-neutral-400">lock</mat-icon>
+      </mat-form-field>
+
+      @if (errorMessage()) {
+        <div class="bg-red-50 text-red-600 p-3 rounded-lg text-xs border border-red-100 mb-2">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <button mat-flat-button color="primary" class="w-full rounded-xl py-6 bg-emerald-600 hover:bg-emerald-700" [disabled]="isLoading()">
+        @if (isLoading()) {
+          <mat-spinner diameter="20" class="mr-2"></mat-spinner>
+        } @else {
+          <mat-icon>login</mat-icon>
+        }
+        Đăng nhập
+      </button>
+
+      <div class="flex items-center gap-4 my-2">
+        <mat-divider class="flex-1"></mat-divider>
+        <span class="text-neutral-400 text-xs uppercase tracking-widest">Hoặc</span>
+        <mat-divider class="flex-1"></mat-divider>
+      </div>
+
+      <button type="button" mat-stroked-button class="w-full rounded-xl py-6 border-neutral-200" (click)="loginWithGoogle()" [disabled]="isLoading()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 mr-2" alt="Google">
+        Tiếp tục với Google
+      </button>
+
+      <p class="text-center text-sm text-neutral-600 mt-4">
+        Chưa có tài khoản?
+        <button type="button" mat-button color="primary" class="p-0 min-w-0 h-auto font-medium" routerLink="/sign-up">
+          Đăng ký ngay
+        </button>
+      </p>
+    </form>
+  </mat-card>
+</div>

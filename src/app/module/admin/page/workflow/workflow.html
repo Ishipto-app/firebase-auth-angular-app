@@ -1,0 +1,88 @@
+<div class="min-h-screen bg-neutral-50 p-8 font-sans">
+  <div class="max-w-4xl mx-auto">
+    @if (authService.user$ | async; as user) {
+      <header class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-3xl font-medium tracking-tight text-neutral-900">Bảng điều khiển Workflow</h1>
+          <p class="text-neutral-500">Chào mừng trở lại, {{ user.displayName || user.email }}</p>
+        </div>
+        <button mat-stroked-button color="warn" class="rounded-xl" (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          Đăng xuất
+        </button>
+      </header>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- Stat Cards -->
+        <mat-card class="p-6 rounded-2xl shadow-sm border border-black/5 bg-white">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center text-emerald-600">
+              <mat-icon>assignment</mat-icon>
+            </div>
+            <div>
+              <p class="text-sm text-neutral-500 uppercase tracking-wider font-medium">Công việc</p>
+              <h2 class="text-2xl font-semibold">12</h2>
+            </div>
+          </div>
+        </mat-card>
+
+        <mat-card class="p-6 rounded-2xl shadow-sm border border-black/5 bg-white">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center text-blue-600">
+              <mat-icon>pending_actions</mat-icon>
+            </div>
+            <div>
+              <p class="text-sm text-neutral-500 uppercase tracking-wider font-medium">Đang xử lý</p>
+              <h2 class="text-2xl font-semibold">5</h2>
+            </div>
+          </div>
+        </mat-card>
+
+        <mat-card class="p-6 rounded-2xl shadow-sm border border-black/5 bg-white">
+          <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center text-purple-600">
+              <mat-icon>check_circle</mat-icon>
+            </div>
+            <div>
+              <p class="text-sm text-neutral-500 uppercase tracking-wider font-medium">Hoàn thành</p>
+              <h2 class="text-2xl font-semibold">28</h2>
+            </div>
+          </div>
+        </mat-card>
+      </div>
+
+      <mat-card class="mt-8 p-8 rounded-2xl shadow-sm border border-black/5 bg-white">
+        <h3 class="text-xl font-medium mb-4">Hoạt động gần đây</h3>
+        <mat-divider class="mb-4"></mat-divider>
+        <div class="space-y-4">
+          <div class="flex items-center gap-4 p-4 hover:bg-neutral-50 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-black/5">
+            <div class="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center">
+              <mat-icon class="text-neutral-400">update</mat-icon>
+            </div>
+            <div class="flex-1">
+              <p class="text-neutral-900 font-medium">Cập nhật tài liệu dự án</p>
+              <p class="text-neutral-500 text-sm">2 giờ trước</p>
+            </div>
+            <mat-icon class="text-neutral-300">chevron_right</mat-icon>
+          </div>
+          
+          <div class="flex items-center gap-4 p-4 hover:bg-neutral-50 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-black/5">
+            <div class="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center">
+              <mat-icon class="text-neutral-400">person_add</mat-icon>
+            </div>
+            <div class="flex-1">
+              <p class="text-neutral-900 font-medium">Thêm thành viên mới vào nhóm</p>
+              <p class="text-neutral-500 text-sm">5 giờ trước</p>
+            </div>
+            <mat-icon class="text-neutral-300">chevron_right</mat-icon>
+          </div>
+        </div>
+      </mat-card>
+    } @else {
+      <div class="flex flex-col items-center justify-center h-[60vh]">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p class="mt-4 text-neutral-500">Đang tải dữ liệu...</p>
+      </div>
+    }
+  </div>
+</div>
