@@ -1,3 +1,4 @@
+import '@angular/compiler';
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
@@ -5,6 +6,7 @@ import {
   writeResponseToNodeResponse,
 } from '@angular/ssr/node';
 import express from 'express';
+import cors from 'cors';
 import {join} from 'node:path';
 import nodemailer from 'nodemailer';
 import crypto from 'node:crypto';
@@ -13,7 +15,7 @@ import 'dotenv/config';
 
 // Initialize Firebase Admin
 const serviceAccount = process.env['FIREBASE_SERVICE_ACCOUNT'];
-const projectId = process.env['FIREBASE_PROJECT_ID'] || (typeof FIREBASE_PROJECT_ID !== 'undefined' ? FIREBASE_PROJECT_ID : '');
+const projectId = process.env['FIREBASE_PROJECT_ID'] || (globalThis as any).FIREBASE_PROJECT_ID || '';
 
 if (serviceAccount) {
   try {
@@ -43,8 +45,21 @@ if (serviceAccount) {
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
 const app = express();
+app.use(cors({
+  origin: ['https://center-ishipto.firebaseapp.com', 'https://center-ishipto.web.app', 'http://localhost:4200'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 app.use(express.json());
-const angularApp = new AngularNodeAppEngine();
+
+let angularApp: AngularNodeAppEngine | undefined;
+try {
+  angularApp = new AngularNodeAppEngine();
+  console.log('Angular SSR: App Engine initialized successfully');
+} catch (error) {
+  console.warn('Angular SSR: App Engine could not be initialized. Running as standalone API server.');
+  console.warn('This is expected when running src/server.ts directly with ts-node without a build.');
+}
 
 app.post('/api/auth/send-verification', async (req, res) => {
   const { email, password } = req.body;
@@ -148,12 +163,21 @@ app.use(
  * Handle all other requests by rendering the Angular application.
  */
 app.use((req, res, next) => {
-  angularApp
-    .handle(req)
-    .then((response) =>
-      response ? writeResponseToNodeResponse(response, res) : next(),
-    )
-    .catch(next);
+  if (angularApp) {
+    angularApp
+      .handle(req)
+      .then((response) =>
+        response ? writeResponseToNodeResponse(response, res) : next(),
+      )
+      .catch(next);
+  } else {
+    // Fallback for standalone API server
+    if (req.path.startsWith('/api/')) {
+      next();
+    } else {
+      res.status(404).send('API Server is running. Angular SSR is not available in this mode.');
+    }
+  }
 });
 
 /**

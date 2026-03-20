@@ -9,8 +9,16 @@
     "rewrites": [
       {
         "source": "**",
-        "destination": "/index.csr.html"
+        "function": "ssrServer"
       }
     ]
+  },
+  "functions": {
+    "source": "dist/app/server",
+    "runtime": "nodejs20"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
   }
 }
