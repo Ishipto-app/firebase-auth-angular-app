@@ -1,4 +1,5 @@
 import {inject, Injectable, signal} from '@angular/core';
+import {API_BASE_URL} from '../../app.constants';
 import {
   Auth,
   authState,
@@ -90,7 +91,7 @@ export class AuthService {
   }
 
   async sendVerificationEmail(email: string, password: string) {
-    const response = await fetch('/api/auth/send-verification', {
+    const response = await fetch(`${API_BASE_URL}/api/auth/send-verification`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),

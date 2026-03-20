@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, Component, inject, OnInit, signal, computed} from '@angular/core';
+import {API_BASE_URL} from '../../../app.constants';
 import {CommonModule} from '@angular/common';
 import {HttpClient} from '@angular/common/http';
 import {Firestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc} from '@angular/fire/firestore';
@@ -115,7 +116,7 @@ export class UserList implements OnInit {
   async fetchAuthUsers() {
     this.isLoadingAuth.set(true);
     try {
-      const users = await firstValueFrom(this.http.get<AuthUser[]>('/api/admin/list-users'));
+      const users = await firstValueFrom(this.http.get<AuthUser[]>(`${API_BASE_URL}/api/admin/list-users`));
       this.authUsers.set(users || []);
     } catch (error: unknown) {
       console.error('Error fetching auth users:', error);
