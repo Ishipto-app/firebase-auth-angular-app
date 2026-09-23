@@ -26,6 +26,10 @@ export class Workflow {
   authService = inject(AuthService);
   private router = inject(Router);
 
+  goToBook() {
+    this.router.navigate(['/admin/book']);
+  }
+
   async logout() {
     this.router.navigate(['/logout']);
   }

@@ -36,6 +36,17 @@ export const routes: Routes = [
     loadComponent: () => import('./module/admin/page/workflow/workflow').then(m => m.Workflow),
   },
   {
+    path: 'admin/book',
+    canActivate: [authGuard],
+    data: { roles: ['workflow', 'admin'] },
+    loadComponent: () => import('./module/admin/page/book/book').then(m => m.Book),
+  },
+  {
+    path: 'book',
+    redirectTo: 'admin/book',
+    pathMatch: 'full',
+  },
+  {
     path: 'admin/user-list',
     canActivate: [authGuard],
     data: { roles: ['admin'] },

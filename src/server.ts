@@ -15,7 +15,7 @@ import 'dotenv/config';
 
 // Initialize Firebase Admin
 const serviceAccount = process.env['FIREBASE_SERVICE_ACCOUNT'];
-const projectId = process.env['FIREBASE_PROJECT_ID'] || (globalThis as any).FIREBASE_PROJECT_ID || '';
+const projectId = process.env['FIREBASE_PROJECT_ID'] || (globalThis as unknown as { FIREBASE_PROJECT_ID?: string }).FIREBASE_PROJECT_ID || '';
 
 if (serviceAccount) {
   try {
@@ -56,7 +56,7 @@ let angularApp: AngularNodeAppEngine | undefined;
 try {
   angularApp = new AngularNodeAppEngine();
   console.log('Angular SSR: App Engine initialized successfully');
-} catch (error) {
+} catch {
   console.warn('Angular SSR: App Engine could not be initialized. Running as standalone API server.');
   console.warn('This is expected when running src/server.ts directly with ts-node without a build.');
 }

@@ -1,0 +1,305 @@
+<div class="min-h-screen bg-neutral-50 p-6 md:p-8 font-sans">
+  <div class="max-w-6xl mx-auto">
+    @if (authService.user$ | async; as user) {
+      <!-- Top Bar: Navigation & Action -->
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+        <div class="flex items-center gap-3">
+          <button
+            mat-stroked-button
+            class="rounded-xl border border-neutral-300 bg-white hover:bg-neutral-100"
+            (click)="goToWorkflow()">
+            <mat-icon>arrow_back</mat-icon>
+            Quay lại Workflow
+          </button>
+          <span class="text-neutral-300">/</span>
+          <span class="text-neutral-600 font-medium">Quản lý Thư viện Book</span>
+        </div>
+
+        <div class="flex items-center gap-3">
+          <button
+            mat-flat-button
+            color="primary"
+            class="rounded-xl px-4 py-2 font-medium flex items-center gap-2 bg-emerald-600 text-white hover:bg-emerald-700"
+            (click)="toggleAddForm()">
+            <mat-icon>{{ isAddFormOpen() ? 'close' : 'add' }}</mat-icon>
+            {{ isAddFormOpen() ? 'Đóng biểu mẫu' : 'Thêm sách mới' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Header Section -->
+      <header class="mb-8">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h1 class="text-3xl font-semibold tracking-tight text-neutral-900 flex items-center gap-3">
+              <span class="p-2.5 rounded-2xl bg-emerald-100 text-emerald-700 inline-flex items-center justify-center">
+                <mat-icon class="!w-7 !h-7 !text-[28px]">menu_book</mat-icon>
+              </span>
+              Quản lý Sách & Tài liệu
+            </h1>
+            <p class="text-neutral-500 mt-1 text-sm md:text-base">
+              Hệ thống theo dõi, tra cứu và luân chuyển tài liệu chuyên ngành của đơn vị.
+            </p>
+          </div>
+
+          <!-- Quick Stats -->
+          <div class="flex items-center gap-3">
+            <div class="bg-white border border-black/5 rounded-2xl px-4 py-2.5 shadow-sm text-center min-w-[90px]">
+              <span class="text-xs text-neutral-400 font-medium block uppercase tracking-wider">Tổng cộng</span>
+              <span class="text-lg font-bold text-neutral-800">{{ totalBooksCount() }}</span>
+            </div>
+            <div class="bg-white border border-black/5 rounded-2xl px-4 py-2.5 shadow-sm text-center min-w-[90px]">
+              <span class="text-xs text-emerald-600 font-medium block uppercase tracking-wider">Sẵn sàng</span>
+              <span class="text-lg font-bold text-emerald-600">{{ availableBooksCount() }}</span>
+            </div>
+            <div class="bg-white border border-black/5 rounded-2xl px-4 py-2.5 shadow-sm text-center min-w-[90px]">
+              <span class="text-xs text-blue-600 font-medium block uppercase tracking-wider">Đang mượn</span>
+              <span class="text-lg font-bold text-blue-600">{{ borrowedBooksCount() }}</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Expandable Add Book Form -->
+      @if (isAddFormOpen()) {
+        <mat-card class="mb-8 p-6 rounded-2xl shadow-sm border border-emerald-200 bg-white">
+          <div class="flex items-center justify-between mb-4 pb-2 border-b border-neutral-100">
+            <h2 class="text-lg font-semibold text-neutral-900 flex items-center gap-2">
+              <mat-icon class="text-emerald-600">bookmark_add</mat-icon>
+              Thêm Sách mới vào danh mục
+            </h2>
+            <button mat-icon-button (click)="toggleAddForm()">
+              <mat-icon class="text-neutral-400">close</mat-icon>
+            </button>
+          </div>
+
+          <form [formGroup]="bookForm" (ngSubmit)="submitBook()" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="col-span-1 md:col-span-2">
+              <label for="book-title" class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+                Tên sách / Tiêu đề <span class="text-rose-500">*</span>
+              </label>
+              <input
+                id="book-title"
+                type="text"
+                formControlName="title"
+                placeholder="Nhập tên sách..."
+                class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 text-sm bg-neutral-50"
+              />
+            </div>
+
+            <div>
+              <label for="book-author" class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+                Tác giả <span class="text-rose-500">*</span>
+              </label>
+              <input
+                id="book-author"
+                type="text"
+                formControlName="author"
+                placeholder="Nhập tên tác giả..."
+                class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 text-sm bg-neutral-50"
+              />
+            </div>
+
+            <div>
+              <label for="book-category" class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+                Thể loại / Chuyên ngành
+              </label>
+              <select
+                id="book-category"
+                formControlName="category"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 text-sm bg-neutral-50">
+                <option value="Kỹ thuật">Kỹ thuật</option>
+                <option value="Kinh doanh">Kinh doanh</option>
+                <option value="Kỹ năng">Kỹ năng</option>
+                <option value="Vận hành">Vận hành</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="book-isbn" class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+                Mã ISBN / Mã hiệu
+              </label>
+              <input
+                id="book-isbn"
+                type="text"
+                formControlName="isbn"
+                placeholder="Ví dụ: 978-0134494164"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 text-sm bg-neutral-50"
+              />
+            </div>
+
+            <div>
+              <label for="book-year" class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+                Năm xuất bản
+              </label>
+              <input
+                id="book-year"
+                type="number"
+                formControlName="publishYear"
+                class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 text-sm bg-neutral-50"
+              />
+            </div>
+
+            <div class="col-span-1 md:col-span-2">
+              <label for="book-desc" class="block text-xs font-semibold text-neutral-700 uppercase tracking-wider mb-1">
+                Mô tả vắn tắt nội dung
+              </label>
+              <textarea
+                id="book-desc"
+                rows="2"
+                formControlName="description"
+                placeholder="Giới thiệu tóm tắt cuốn sách..."
+                class="w-full px-3.5 py-2.5 rounded-xl border border-neutral-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-600 text-sm bg-neutral-50"
+              ></textarea>
+            </div>
+
+            <div class="col-span-1 md:col-span-2 flex items-center justify-end gap-3 mt-2">
+              <button
+                type="button"
+                mat-stroked-button
+                class="rounded-xl"
+                (click)="toggleAddForm()">
+                Huỷ bỏ
+              </button>
+              <button
+                type="submit"
+                mat-flat-button
+                color="primary"
+                class="rounded-xl bg-emerald-600 text-white hover:bg-emerald-700">
+                <mat-icon>check</mat-icon>
+                Lưu vào hệ thống
+              </button>
+            </div>
+          </form>
+        </mat-card>
+      }
+
+      <!-- Search & Filters Bar -->
+      <div class="bg-white p-4 rounded-2xl shadow-sm border border-black/5 mb-6 flex flex-col md:flex-row items-center justify-between gap-4">
+        <!-- Search Field -->
+        <div class="relative w-full md:w-80">
+          <mat-icon class="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 !text-xl !w-5 !h-5">search</mat-icon>
+          <input
+            type="text"
+            [value]="searchQuery()"
+            (input)="onSearchChange($event)"
+            placeholder="Tìm kiếm theo tên sách, tác giả..."
+            class="w-full pl-10 pr-4 py-2 rounded-xl border border-neutral-200 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-800"
+          />
+        </div>
+
+        <!-- Category Filters -->
+        <div class="flex items-center gap-1.5 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
+          @for (cat of categories; track cat) {
+            <button
+              type="button"
+              (click)="setCategory(cat)"
+              class="px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-colors border"
+              [class.bg-neutral-900]="selectedCategory() === cat"
+              [class.text-white]="selectedCategory() === cat"
+              [class.border-neutral-900]="selectedCategory() === cat"
+              [class.bg-neutral-100]="selectedCategory() !== cat"
+              [class.text-neutral-600]="selectedCategory() !== cat"
+              [class.border-transparent]="selectedCategory() !== cat">
+              {{ cat === 'all' ? 'Tất cả' : cat }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Book List Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        @for (item of filteredBooks(); track item.id) {
+          <mat-card class="rounded-2xl border border-black/5 bg-white shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow">
+            <!-- Book Header Badge & Cover Strip -->
+            <div>
+              <div class="h-2 w-full" [class]="item.coverColor"></div>
+              <div class="p-5">
+                <div class="flex items-start justify-between gap-2 mb-2">
+                  <span class="text-[11px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-md bg-neutral-100 text-neutral-600">
+                    {{ item.category }}
+                  </span>
+                  
+                  @if (item.status === 'available') {
+                    <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                      Sẵn sàng
+                    </span>
+                  } @else if (item.status === 'borrowed') {
+                    <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                      Đang mượn
+                    </span>
+                  } @else {
+                    <span class="text-[11px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-700 border border-amber-200 flex items-center gap-1">
+                      <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                      Đã đặt
+                    </span>
+                  }
+                </div>
+
+                <h3 class="text-base font-semibold text-neutral-900 leading-snug line-clamp-2 mb-1">
+                  {{ item.title }}
+                </h3>
+
+                <p class="text-xs text-neutral-500 mb-3 flex items-center gap-1">
+                  <mat-icon class="!text-sm !w-4 !h-4 text-neutral-400">person</mat-icon>
+                  <span>{{ item.author }}</span>
+                  <span class="text-neutral-300">•</span>
+                  <span>{{ item.publishYear }}</span>
+                </p>
+
+                <p class="text-xs text-neutral-600 line-clamp-3 mb-4 leading-relaxed bg-neutral-50/60 p-2.5 rounded-xl border border-black/5">
+                  {{ item.description }}
+                </p>
+
+                @if (item.status === 'borrowed' && item.borrowerName) {
+                  <div class="mb-4 text-xs bg-blue-50/80 border border-blue-100 rounded-xl p-2 text-blue-800 flex items-center gap-1.5">
+                    <mat-icon class="!text-sm !w-4 !h-4 text-blue-500">account_circle</mat-icon>
+                    <span>Người mượn: <strong>{{ item.borrowerName }}</strong></span>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div class="px-5 py-3.5 bg-neutral-50/70 border-t border-black/5 flex items-center justify-between gap-2">
+              <span class="text-[11px] text-neutral-400 font-mono">{{ item.id }}</span>
+              
+              <div class="flex items-center gap-1.5">
+                <button
+                  mat-stroked-button
+                  class="rounded-xl !text-xs !py-1 !px-2.5 h-8"
+                  (click)="toggleBorrowStatus(item.id)">
+                  <mat-icon class="!text-sm !w-4 !h-4 mr-1">
+                    {{ item.status === 'available' ? 'bookmark_border' : 'replay' }}
+                  </mat-icon>
+                  {{ item.status === 'available' ? 'Mượn sách' : 'Trả sách' }}
+                </button>
+
+                <button
+                  mat-icon-button
+                  class="text-neutral-400 hover:text-rose-600"
+                  (click)="deleteBook(item.id)"
+                  title="Xoá sách">
+                  <mat-icon class="!text-base">delete_outline</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card>
+        } @empty {
+          <div class="col-span-full py-16 text-center bg-white rounded-2xl border border-black/5 shadow-sm">
+            <mat-icon class="!w-12 !h-12 !text-[48px] text-neutral-300 mb-2">menu_book</mat-icon>
+            <h3 class="text-base font-medium text-neutral-700">Không tìm thấy tài liệu phù hợp</h3>
+            <p class="text-sm text-neutral-400 mt-1">Vui lòng thử tìm kiếm với từ khóa khác hoặc chọn tất cả danh mục.</p>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="flex flex-col items-center justify-center h-[60vh]">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p class="mt-4 text-neutral-500">Đang tải dữ liệu thư viện...</p>
+      </div>
+    }
+  </div>
+</div>

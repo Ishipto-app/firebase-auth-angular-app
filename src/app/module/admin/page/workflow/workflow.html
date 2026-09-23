@@ -1,16 +1,39 @@
 <div class="min-h-screen bg-neutral-50 p-8 font-sans">
   <div class="max-w-4xl mx-auto">
     @if (authService.user$ | async; as user) {
-      <header class="flex items-center justify-between mb-8">
+      <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 class="text-3xl font-medium tracking-tight text-neutral-900">Bảng điều khiển Workflow</h1>
           <p class="text-neutral-500">Chào mừng trở lại, {{ user.displayName || user.email }}</p>
         </div>
-        <button mat-stroked-button color="warn" class="rounded-xl" (click)="logout()">
-          <mat-icon>logout</mat-icon>
-          Đăng xuất
-        </button>
+        <div class="flex items-center gap-3">
+          <button mat-flat-button class="rounded-xl bg-emerald-600 text-white hover:bg-emerald-700" (click)="goToBook()">
+            <mat-icon>menu_book</mat-icon>
+            Quản lý Sách (Book)
+          </button>
+          <button mat-stroked-button color="warn" class="rounded-xl" (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            Đăng xuất
+          </button>
+        </div>
       </header>
+
+      <!-- Quick Action / Book Module Banner -->
+      <mat-card class="mb-6 p-6 rounded-2xl shadow-sm border border-emerald-100 bg-gradient-to-r from-emerald-50/60 to-white flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-600 flex items-center justify-center text-white shadow-sm">
+            <mat-icon>menu_book</mat-icon>
+          </div>
+          <div>
+            <h3 class="text-base font-semibold text-neutral-900">Phân hệ Quản lý Sách & Tài liệu (Book)</h3>
+            <p class="text-neutral-500 text-xs md:text-sm">Tra cứu danh mục sách, quản lý trạng thái mượn trả và thêm sách mới.</p>
+          </div>
+        </div>
+        <button mat-flat-button class="rounded-xl bg-neutral-900 text-white hover:bg-neutral-800" (click)="goToBook()">
+          Truy cập Book
+          <mat-icon class="!mr-0 !ml-1">arrow_forward</mat-icon>
+        </button>
+      </mat-card>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <!-- Stat Cards -->
