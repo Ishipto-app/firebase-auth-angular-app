@@ -7,7 +7,7 @@
     "dev": "cross-env ng serve --port=3000 --host=0.0.0.0",
     "dev:local": "ng serve",
     "server": "ts-node src/server.ts",
-    "build": "ng build && move /Y dist/app/browser/index.csr.html dist/app/browser/index.html",
+    "build": "ng build && mv /Y dist/app/browser/index.csr.html dist/app/browser/index.html",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
